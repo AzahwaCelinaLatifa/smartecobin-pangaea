@@ -23,6 +23,13 @@ export default function RoleSelection({ onRoleSelect }: { onRoleSelect: (role: s
     },
   ];
 
+  const handleContinue = () => {
+    if (selectedRole) {
+      sessionStorage.setItem("userRole", selectedRole);
+      onRoleSelect(selectedRole);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 p-4 flex items-center justify-center">
       <div className="w-full max-w-4xl">
@@ -64,7 +71,7 @@ export default function RoleSelection({ onRoleSelect }: { onRoleSelect: (role: s
             size="lg"
             className="px-12 h-14 rounded-xl eco-gradient text-white font-semibold"
             disabled={!selectedRole}
-            onClick={() => selectedRole && onRoleSelect(selectedRole)}
+            onClick={handleContinue}
             data-testid="button-continue"
           >
             Continue

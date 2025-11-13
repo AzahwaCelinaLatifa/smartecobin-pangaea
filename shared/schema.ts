@@ -7,6 +7,9 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  role: varchar("role").notNull().default("public"), // 'public' or 'officer'
+  fieldOfficerName: text("field_officer_name"), // Nama field officer untuk public user
+  fieldOfficerPhone: text("field_officer_phone"), // Nomor field officer
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

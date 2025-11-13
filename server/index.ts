@@ -1,8 +1,31 @@
+import dotenv from "dotenv";
+
+// Load .env from the project root
+dotenv.config();
+
+// Set NODE_ENV explicitly if not set
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = "development";
+}
+
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+app.set("env", process.env.NODE_ENV);
+
+// CORS Middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 declare module 'http' {
   interface IncomingMessage {
@@ -54,7 +77,9 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
+    // Log the error but do not rethrow — rethrowing causes the process to exit
+    // which makes it hard to apply DB fixes while the server is running.
+    console.error(err);
   });
 
   // importantly only setup vite in development and after
@@ -73,8 +98,7 @@ app.use((req, res, next) => {
   const port = parseInt(process.env.PORT || '5000', 10);
   server.listen({
     port,
-    host: "0.0.0.0",
-    reusePort: true,
+    host: "127.0.0.1",
   }, () => {
     log(`serving on port ${port}`);
   });

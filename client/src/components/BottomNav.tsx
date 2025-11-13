@@ -1,16 +1,33 @@
-import { LayoutDashboard, Map, Sliders, Bell, User } from "lucide-react";
+import { LayoutDashboard, Map, Sliders, Bell, User, Home } from "lucide-react";
 import { useLocation } from "wouter";
+import { useEffect, useState } from "react";
 
 export default function BottomNav() {
   const [location, setLocation] = useLocation();
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-  const navItems = [
+  useEffect(() => {
+    // Ambil role dari sessionStorage atau context
+    const role = sessionStorage.getItem("userRole") || "officer";
+    setUserRole(role);
+  }, []);
+
+  const publicNavItems = [
+    { path: "/home", icon: Home, label: "Home" },
+    { path: "/control", icon: Sliders, label: "Control" },
+    { path: "/monitor", icon: Map, label: "Monitor" },
+    { path: "/profile", icon: User, label: "Profile" },
+  ];
+
+  const officerNavItems = [
     { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { path: "/monitoring", icon: Map, label: "Monitor" },
     { path: "/control", icon: Sliders, label: "Control" },
     { path: "/notifications", icon: Bell, label: "Alerts" },
     { path: "/profile", icon: User, label: "Profile" },
   ];
+
+  const navItems = userRole === "public" ? publicNavItems : officerNavItems;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 glassmorphism border-t">
