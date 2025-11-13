@@ -5,11 +5,25 @@
   "type": "module",
   "license": "MIT",
 "scripts": {
+<<<<<<< HEAD
 "dev": "cross-env DEV_BYPASS_AUTH=1 VITE_DEV_BYPASS_AUTH=1 tsx server/index.ts",
 "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
 "start": "NODE_ENV=production node dist/index.js",
 "check": "tsc",
 "db:push": "drizzle-kit push"
+=======
+  "dev": "tsx server/index.ts",
+  "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+  "start": "NODE_ENV=production node dist/index.js",
+  "check": "tsc",
+  "db:push": "drizzle-kit push",
+  "db:deploy": "tsx scripts/deploy-schema.ts",
+  "db:update-passwords": "tsx scripts/update-sample-passwords.ts",
+  "db:relax-password-hash": "tsx scripts/relax-password-hash.ts",
+    "client": "vite",
+    "client:3000": "vite --port 3000",
+  "auth:seed-samples": "tsx scripts/create-sample-auth-users.ts"
+>>>>>>> 92e1ac3eafb36fc47393390fbfebaf9e050c46a5
 },
 
 "dependencies": {
@@ -53,6 +67,7 @@
     "date-fns": "^3.6.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.39.1",
+    "pg": "^8.13.1",
     "drizzle-zod": "^0.7.0",
     "embla-carousel-react": "^8.6.0",
     "express": "^4.21.2",
