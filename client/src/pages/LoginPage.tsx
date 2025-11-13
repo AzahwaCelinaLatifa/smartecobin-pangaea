@@ -41,7 +41,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Login failed");
+        setError(data.error || "Gagal masuk");
         return;
       }
 
@@ -52,7 +52,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
       onLogin();
       navigate("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+  setError(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
@@ -66,7 +66,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
 
     try {
       if (password.length < 6) {
-        setError("Password must be at least 6 characters");
+        setError("Kata sandi minimal 6 karakter");
         setLoading(false);
         return;
       }
@@ -80,7 +80,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Registration failed");
+        setError(data.error || "Pendaftaran gagal");
         return;
       }
 
@@ -100,7 +100,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
         });
       }, 1000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+  setError(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
@@ -114,7 +114,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
             <Leaf className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">SmartEcoBin</h1>
-          <p className="text-white/90 text-sm">Smart Trash Management System</p>
+          <p className="text-white/90 text-sm">Sistem Manajemen Sampah Pintar</p>
         </div>
 
         {/* Error Alert */}
@@ -179,12 +179,12 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
           {isRegister && (
             <div className="space-y-2">
               <Label htmlFor="name" className="text-white text-sm font-medium">
-                Full Name
+                Nama Lengkap
               </Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="John Doe"
+                placeholder="Budi Santoso"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="bg-white/90 border-0 h-10 sm:h-12 rounded-xl"
@@ -200,7 +200,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
             <Input
               id="email"
               type="email"
-              placeholder="your@email.com"
+              placeholder="email@contoh.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="bg-white/90 border-0 h-10 sm:h-12 rounded-xl"
@@ -211,7 +211,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
           {isRegister && (
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-white text-sm font-medium">
-                Phone (Optional)
+                Telepon (Opsional)
               </Label>
               <Input
                 id="phone"
@@ -226,7 +226,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
 
           <div className="space-y-2">
             <Label htmlFor="password" className="text-white text-sm font-medium">
-              Password
+              Kata Sandi
             </Label>
             <Input
               id="password"
@@ -238,7 +238,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
               required
             />
             {isRegister && (
-              <p className="text-white/70 text-xs">Must be at least 6 characters</p>
+              <p className="text-white/70 text-xs">Minimal 6 karakter</p>
             )}
           </div>
 
@@ -247,6 +247,9 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
             disabled={loading || (isRegister && cooldown > 0)}
             className="w-full h-10 sm:h-12 rounded-xl bg-white text-primary font-semibold hover:bg-white/90 transition-all disabled:opacity-50"
           >
+<<<<<<< HEAD
+            {loading ? "Memuat..." : isRegister ? "Buat Akun" : "Masuk"}
+=======
             {loading
               ? "Loading..."
               : isRegister
@@ -254,12 +257,13 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
                   ? `Create Account (wait ${cooldown}s)`
                   : "Create Account"
                 : "Sign In"}
+>>>>>>> 92e1ac3eafb36fc47393390fbfebaf9e050c46a5
           </Button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-white/80">
-            {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
+            {isRegister ? "Sudah punya akun?" : "Belum punya akun?"} {" "}
             <button
               onClick={() => {
                 setIsRegister(!isRegister);
@@ -271,7 +275,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
               }}
               className="font-semibold text-white hover:underline"
             >
-              {isRegister ? "Sign In" : "Sign Up"}
+              {isRegister ? "Masuk" : "Daftar"}
             </button>
           </p>
         </div>
