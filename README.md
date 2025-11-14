@@ -7,6 +7,7 @@
 ## 📋 APA YANG SUDAH ADA (Completed)
 
 ### ✅ Backend API (Complete)
+
 ```
 ✓ Authentication Routes
   - POST /api/auth/register → Create account (name, email, password, phone)
@@ -41,6 +42,7 @@
 ```
 
 ### ✅ Frontend UI (Complete)
+
 ```
 ✓ Authentication Pages
   - LoginPage.tsx → Register & Login with toggle
@@ -96,6 +98,7 @@
 ```
 
 ### ✅ Database Schema (Ready to Deploy)
+
 ```
 ✓ Users Table
   - UUID primary key
@@ -138,6 +141,7 @@
 ```
 
 ### ✅ Documentation (Complete)
+
 ```
 ✓ IMPLEMENTATION_GUIDE.md
   - 500+ lines documentation
@@ -171,6 +175,7 @@
 ```
 
 ### ✅ Dependencies Installed
+
 ```
 ✓ Backend
   - express@4.x
@@ -195,9 +200,11 @@
 ## 🔴 APA YANG PERLU ANDA SEDIAKAN (Critical)
 
 ### 1️⃣ Supabase Credentials
+
 **Location**: `.env` (root folder)
 
 **What to fill:**
+
 ```properties
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiI...
@@ -205,6 +212,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiI...
 ```
 
 **How to get:**
+
 1. Buka https://supabase.com
 2. Login atau sign up (gratis)
 3. Create new project
@@ -215,15 +223,18 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiI...
 ---
 
 ### 2️⃣ Database Schema Deployment
+
 **Location**: Supabase Dashboard → SQL Editor
 
 **What to do:**
+
 1. Buka file `SUPABASE_SCHEMA.sql`
 2. Copy **SELURUH** isi file
 3. Paste ke Supabase SQL Editor
 4. Klik **RUN**
 
 **What it does:**
+
 - Buat semua tables (users, trash_bins, notifications)
 - Insert 5 sample trash bins
 - Insert 3 sample users
@@ -233,19 +244,24 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiI...
 ---
 
 ### 3️⃣ Update Sample User Passwords
+
 **Location**: Supabase Dashboard → SQL Editor
 
 **What to do:**
+
 1. Buka SQL Editor
 2. Paste SQL berikut:
+
 ```sql
-UPDATE users 
+UPDATE users
 SET password_hash = '$2b$10$N9qo8uLOickgx2ZMRZoXyejNbxb7Jdv4oXk0f6qECbAL9Yfm2bZLa'
 WHERE email IN ('admin@example.com', 'ahmad@example.com', 'budi@example.com');
 ```
+
 3. Klik RUN
 
 **Why:**
+
 - Sample data punya placeholder password
 - Update ini set password ke: `password123` (bcrypt hash)
 - Setelah ini bisa login dengan sample accounts
@@ -253,9 +269,11 @@ WHERE email IN ('admin@example.com', 'ahmad@example.com', 'budi@example.com');
 ---
 
 ### 4️⃣ Update Frontend Environment
+
 **Location**: `client/.env`
 
 **What to fill:**
+
 ```properties
 VITE_API_URL=http://localhost:5000
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
@@ -280,6 +298,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiI...
 ## 📊 FEATURE CHECKLIST
 
 ### Authentication ✅
+
 - [x] Register dengan name, email, password, phone
 - [x] Login dengan email & password
 - [x] JWT token (7-day expiry)
@@ -289,6 +308,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiI...
 - [x] Role-based access (public/officer/admin)
 
 ### Monitoring Dashboard ✅
+
 - [x] Real-time statistics (total, normal, warning, full)
 - [x] List view dengan bins
 - [x] Search by name/location
@@ -298,6 +318,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiI...
 - [x] Loading states
 
 ### Map Features ✅
+
 - [x] Interactive Leaflet map
 - [x] Color-coded markers (green/orange/red)
 - [x] Popup dengan bin info
@@ -308,6 +329,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiI...
 - [x] Distance calculation
 
 ### Bin Details Page ✅
+
 - [x] Map dengan marker
 - [x] Fill level progress bar
 - [x] Battery level indicator
@@ -318,6 +340,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiI...
 - [x] Back navigation
 
 ### Responsive Design ✅
+
 - [x] Mobile-first
 - [x] Tablet layout
 - [x] Desktop layout
@@ -326,6 +349,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiI...
 - [x] No horizontal scroll
 
 ### Error Handling ✅
+
 - [x] Network error messages
 - [x] Authentication errors
 - [x] Loading states
@@ -333,6 +357,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiI...
 - [x] CORS handled
 
 ### Documentation ✅
+
 - [x] Complete implementation guide
 - [x] Testing guide
 - [x] Setup checklist
@@ -345,11 +370,13 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiI...
 ## 🚀 HOW TO RUN
 
 ### Prerequisites
+
 - Node.js & npm installed
 - Supabase account (free)
 - Browser (Chrome/Firefox recommended)
 
 ### Steps
+
 ```bash
 # 1. Update credentials
 Edit .env                    # Add SUPABASE_URL, SUPABASE_ANON_KEY, etc.
@@ -370,11 +397,60 @@ npm run dev
 http://localhost:5173
 ```
 
+### 🔄 Single-Port Development (Recommended)
+
+Anda bisa menjalankan API + client bersama di satu port menggunakan Express + Vite middleware. Ini menyederhanakan CORS dan memastikan path relatif bekerja.
+
+```bash
+# Pastikan DEV_PORT diset (misal 5002) di .env
+# Hentikan proses Vite terpisah (5173/3000) jika masih berjalan
+
+npx cross-env DEV_PORT=5002 DEV_BYPASS_AUTH=1 VITE_DEV_BYPASS_AUTH=1 tsx server/index.ts
+# Buka aplikasi:
+http://localhost:5002
+```
+
+### 🧪 Mode Terpisah (Alternatif)
+
+Jika ingin memisah port API dan client:
+
+```bash
+# API dev server
+npm run dev              # Pakai DEV_PORT atau PORT
+
+# Client Vite (default port sesuai Vite, sering 5173)
+npm run client
+
+# Client di port khusus
+npm run client:3000
+```
+
+### 🌐 Konfigurasi URL API di Frontend
+
+- Frontend memakai `VITE_API_URL` jika tersedia.
+- Jika tidak diset dan berjalan di Vite default (5173), logika di `client/src/lib/api.ts` otomatis mengubah ke `:5001`.
+- Jika Anda mengganti DEV_PORT ke `5002`, set secara eksplisit:
+
+```bash
+# client/.env
+VITE_API_URL=http://localhost:5002
+```
+
+Perlu menyesuaikan juga variabel Supabase di `client/.env` jika digunakan:
+
+```bash
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
+
+> Tip: Samakan nilai Supabase di root `.env` dan `client/.env` untuk konsistensi environment.
+
 ---
 
 ## 📱 TEST CREDENTIALS (After Setup)
 
 **Sample Accounts:**
+
 ```
 Email: budi@example.com
 Email: ahmad@example.com
@@ -383,6 +459,7 @@ Password: password123 (untuk semua)
 ```
 
 **Or register new account:**
+
 ```
 Name: Your Name
 Email: your@email.com
@@ -394,34 +471,36 @@ Phone: optional
 
 ## 🎯 TOTAL SETUP TIME
 
-| Step | Time | Task |
-|------|------|------|
-| 1 | 2 min | Buat Supabase project |
-| 2 | 1 min | Update .env files |
-| 3 | 1 min | Deploy schema SQL |
-| 4 | 1 min | Update sample passwords |
-| 5 | 1 min | Run `npm run dev` |
-| 6 | 5 min | Testing & exploration |
-| **TOTAL** | **~11 minutes** | **System ready!** |
+| Step      | Time            | Task                    |
+| --------- | --------------- | ----------------------- |
+| 1         | 2 min           | Buat Supabase project   |
+| 2         | 1 min           | Update .env files       |
+| 3         | 1 min           | Deploy schema SQL       |
+| 4         | 1 min           | Update sample passwords |
+| 5         | 1 min           | Run `npm run dev`       |
+| 6         | 5 min           | Testing & exploration   |
+| **TOTAL** | **~11 minutes** | **System ready!**       |
 
 ---
 
 ## ☁️ Deploy ke Vercel (Production)
 
 - Pastikan env vars diset di Vercel Project Settings → Environment Variables:
+
   - `SUPABASE_URL`
   - `SUPABASE_ANON_KEY`
   - `SUPABASE_SERVICE_ROLE_KEY`
   - `JWT_SECRET`
 
 - Konfigurasi deploy (sudah disiapkan):
+
   - `vercel.json` menjalankan `npm run vercel-build` untuk build client ke `dist/public` (lihat `vite.config.ts`).
   - Semua request `/api/*` diarahkan ke fungsi serverless `api/index.ts` (Express adapter).
   - Fallback SPA: semua route non-API diarahkan ke `/dist/public/index.html`.
 
 - Deploy via CLI (Windows PowerShell):
 
-```powershell
+````powershell
 
 ---
 
@@ -552,3 +631,4 @@ Happy coding! 💚
 **Status**: Complete & Ready for Deployment
 **Time to Setup**: ~15 minutes
 **Technologies**: React, Express, TypeScript, Supabase, Leaflet
+````
