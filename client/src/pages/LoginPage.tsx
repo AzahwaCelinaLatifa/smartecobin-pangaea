@@ -4,14 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Leaf, AlertCircle } from "lucide-react";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import { API_URL } from "@/lib/api";
 
 export default function LoginPage({ onLogin }: { onLogin: () => void }) {
   const navigate = useNavigate();
   const [isRegister, setIsRegister] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
   // Login fields
   const [email, setEmail] = useState("");
@@ -24,6 +27,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setInfo("");
     setLoading(true);
 
     try {
@@ -36,7 +40,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Login failed");
+        setError(data.error || "Gagal masuk");
         return;
       }
 
@@ -47,7 +51,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
       onLogin();
       navigate("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+  setError(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
@@ -56,11 +60,12 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setInfo("");
     setLoading(true);
 
     try {
       if (password.length < 6) {
-        setError("Password must be at least 6 characters");
+        setError("Kata sandi minimal 6 karakter");
         setLoading(false);
         return;
       }
@@ -74,18 +79,27 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Registration failed");
+        setError(data.error || "Pendaftaran gagal");
         return;
       }
 
-      // Store token
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      onLogin();
-      navigate("/dashboard");
+      // For email-confirm flow: show instruction and start cooldown instead of auto-login
+      setInfo(
+        data.message ||
+          "Registration successful. Please check your email to confirm your account."
+      );
+      setCooldown(12);
+      const timer = setInterval(() => {
+        setCooldown((c) => {
+          if (c <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return c - 1;
+        });
+      }, 1000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+  setError(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
@@ -99,7 +113,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
             <Leaf className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">SmartEcoBin</h1>
-          <p className="text-white/90 text-sm">Smart Trash Management System</p>
+          <p className="text-white/90 text-sm">Sistem Manajemen Sampah Pintar</p>
         </div>
 
         {/* Error Alert */}
@@ -110,16 +124,66 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
           </div>
         )}
 
+        {/* Info Alert */}
+        {info && (
+          <div className="mb-4 p-3 rounded-lg bg-emerald-500/20 border border-emerald-500/50">
+            <p className="text-emerald-100 text-sm">{info}</p>
+            {isRegister && (
+              <div className="mt-2 flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={resendLoading || resendCooldown > 0 || !email}
+                  onClick={async () => {
+                    setError("");
+                    setResendLoading(true);
+                    try {
+                      const resp = await fetch(`${API_URL}/api/auth/resend-confirmation`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email }),
+                      });
+                      const data = await resp.json();
+                      if (!resp.ok) {
+                        setError(data.error || 'Failed to resend');
+                      } else {
+                        setInfo(data.message || 'Email konfirmasi dikirim ulang.');
+                        setResendCooldown(12);
+                        const rt = setInterval(() => {
+                          setResendCooldown((c) => {
+                            if (c <= 1) { clearInterval(rt); return 0; }
+                            return c - 1;
+                          });
+                        }, 1000);
+                      }
+                    } catch (e) {
+                      setError(e instanceof Error ? e.message : 'Resend error');
+                    } finally {
+                      setResendLoading(false);
+                    }
+                  }}
+                  className="text-xs px-2 py-1 rounded bg-emerald-600/40 text-emerald-100 hover:bg-emerald-600/60 disabled:opacity-50"
+                >
+                  {resendLoading
+                    ? 'Sending...'
+                    : resendCooldown > 0
+                      ? `Resend (${resendCooldown}s)`
+                      : 'Resend email'}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
         <form onSubmit={isRegister ? handleRegister : handleLogin} className="space-y-4">
           {isRegister && (
             <div className="space-y-2">
               <Label htmlFor="name" className="text-white text-sm font-medium">
-                Full Name
+                Nama Lengkap
               </Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="John Doe"
+                placeholder="Budi Santoso"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="bg-white/90 border-0 h-10 sm:h-12 rounded-xl"
@@ -135,7 +199,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
             <Input
               id="email"
               type="email"
-              placeholder="your@email.com"
+              placeholder="email@contoh.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="bg-white/90 border-0 h-10 sm:h-12 rounded-xl"
@@ -146,7 +210,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
           {isRegister && (
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-white text-sm font-medium">
-                Phone (Optional)
+                Telepon (Opsional)
               </Label>
               <Input
                 id="phone"
@@ -161,7 +225,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
 
           <div className="space-y-2">
             <Label htmlFor="password" className="text-white text-sm font-medium">
-              Password
+              Kata Sandi
             </Label>
             <Input
               id="password"
@@ -173,22 +237,28 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
               required
             />
             {isRegister && (
-              <p className="text-white/70 text-xs">Must be at least 6 characters</p>
+              <p className="text-white/70 text-xs">Minimal 6 karakter</p>
             )}
           </div>
 
           <Button
             type="submit"
-            disabled={loading}
+            disabled={loading || (isRegister && cooldown > 0)}
             className="w-full h-10 sm:h-12 rounded-xl bg-white text-primary font-semibold hover:bg-white/90 transition-all disabled:opacity-50"
           >
-            {loading ? "Loading..." : isRegister ? "Create Account" : "Sign In"}
+            {loading
+              ? "Loading..."
+              : isRegister
+                ? cooldown > 0
+                  ? `Create Account (wait ${cooldown}s)`
+                  : "Create Account"
+                : "Sign In"}
           </Button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-white/80">
-            {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
+            {isRegister ? "Sudah punya akun?" : "Belum punya akun?"} {" "}
             <button
               onClick={() => {
                 setIsRegister(!isRegister);
@@ -200,7 +270,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
               }}
               className="font-semibold text-white hover:underline"
             >
-              {isRegister ? "Sign In" : "Sign Up"}
+              {isRegister ? "Masuk" : "Daftar"}
             </button>
           </p>
         </div>
