@@ -8,6 +8,21 @@ if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = "development";
 }
 
+// Fail-fast environment validation in production
+if (process.env.NODE_ENV === 'production') {
+  const required = [
+    'SUPABASE_URL',
+    'SUPABASE_ANON_KEY',
+    'JWT_SECRET'
+  ];
+  const missing = required.filter((k) => !process.env[k]);
+  if (missing.length) {
+    console.error(`[env] Missing required environment variables: ${missing.join(', ')}`);
+    // Throw to surface misconfiguration early on Vercel instead of silent placeholder clients
+    throw new Error(`Missing environment variables: ${missing.join(', ')}`);
+  }
+}
+
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -99,11 +114,16 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   // Prefer DEV_PORT in development to avoid conflicts with global PORT
-  const port = parseInt(process.env.DEV_PORT || process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "127.0.0.1",
-  }, () => {
-    log(`serving on port ${port}`);
-  });
+  const SHOULD_LISTEN = !process.env.BUILD_NO_LISTEN;
+  if (SHOULD_LISTEN) {
+    const port = parseInt(process.env.DEV_PORT || process.env.PORT || '5000', 10);
+    server.listen({
+      port,
+      host: "127.0.0.1",
+    }, () => {
+      log(`serving on port ${port}`);
+    });
+  } else {
+    log('Skipping server.listen (BUILD_NO_LISTEN=1)');
+  }
 })();
