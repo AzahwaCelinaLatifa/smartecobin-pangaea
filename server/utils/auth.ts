@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
@@ -7,7 +7,8 @@ const BCRYPT_ROUNDS = 10;
 
 // Hash password
 export async function hashPassword(password: string): Promise<string> {
-  return await bcrypt.hash(password, BCRYPT_ROUNDS);
+  // bcryptjs provides sync methods; wrap to keep async signature
+  return bcrypt.hashSync(password, BCRYPT_ROUNDS);
 }
 
 // Verify password
@@ -15,7 +16,7 @@ export async function verifyPassword(
   password: string,
   hash: string
 ): Promise<boolean> {
-  return await bcrypt.compare(password, hash);
+  return bcrypt.compareSync(password, hash);
 }
 
 // Create JWT token
