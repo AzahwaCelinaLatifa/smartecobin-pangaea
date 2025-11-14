@@ -38,6 +38,31 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"],
+          leaflet: ["leaflet", "react-leaflet"],
+          supabase: ["@supabase/supabase-js"],
+          vendor: [
+            "react-router-dom",
+            "@tanstack/react-query",
+            "framer-motion",
+            "lucide-react",
+          ],
+        },
+      },
+    },
+  },
+  css: {
+    postcss: {
+      // Ensure PostCSS has a source context to avoid 'from' warnings
+      // Note: Vite respects postcss.config.js but this provides an explicit context
+      plugins: [],
+      // Setting from to undefined tells PostCSS there is no file on disk
+      from: undefined as unknown as string,
+    },
   },
   server: {
     fs: {

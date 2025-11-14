@@ -1,6 +1,7 @@
 // Vercel Serverless entry: wraps our Express app without server.listen
 import express, { type Express, type Request, type Response, type NextFunction } from 'express';
-import { registerRoutes } from '../server/routes';
+// Explicit .js extension for Node ESM resolution in Vercel bundle
+import { registerRoutes } from '../server/http-routes.js';
 
 let cachedApp: Express | null = null;
 
