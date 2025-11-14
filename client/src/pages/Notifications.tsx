@@ -29,7 +29,10 @@ export default function Notifications() {
         const resp = await fetch(`${API_URL}/api/actions/history?limit=50`, {
           headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) }
         });
-        const data = await resp.json();
+        const contentType = resp.headers.get('content-type') || '';
+        const data = contentType.includes('application/json')
+          ? await resp.json()
+          : { error: await resp.text() };
         if (!resp.ok) throw new Error(data.error || data.details || 'Gagal memuat histori');
         setItems(data.history || []);
       } catch (e: any) {
