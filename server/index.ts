@@ -25,6 +25,7 @@ if (process.env.NODE_ENV === 'production') {
 
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./http-routes";
+import { createServer } from "http";
 import { setupVite, serveStatic, log } from "./vite";
 
 // Diagnostic handlers to surface otherwise hidden runtime errors
@@ -88,7 +89,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  registerRoutes(app);
+  const nodeServer = createServer(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
@@ -104,7 +106,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
-    await setupVite(app, server);
+    await setupVite(app, nodeServer);
   } else {
     serveStatic(app);
   }
@@ -117,7 +119,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   const SHOULD_LISTEN = !process.env.BUILD_NO_LISTEN;
   if (SHOULD_LISTEN) {
     const port = parseInt(process.env.DEV_PORT || process.env.PORT || '5000', 10);
-    server.listen({
+    nodeServer.listen({
       port,
       host: "127.0.0.1",
     }, () => {

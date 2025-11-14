@@ -20,8 +20,8 @@ async function buildApp(): Promise<Express> {
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
 
-  // Mount our API routes (ignore the returned Node server)
-  await registerRoutes(app);
+  // Mount our API routes (pure Express, no Node http server here)
+  registerRoutes(app);
 
   return app;
 }
